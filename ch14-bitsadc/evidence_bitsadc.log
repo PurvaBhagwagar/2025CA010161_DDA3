@@ -1,0 +1,63 @@
++ sudo modprobe industrialio
++ sudo insmod ./bitsadc.ko threshold=3000
++ sleep 1
++ ls /sys/bus/iio/devices/
+iio:device0
+++ ls /sys/bus/iio/devices/
+++ head -n1
+++ grep '^iio:device'
++ IIO_DEV=iio:device0
++ echo 'Using iio:device0'
+Using iio:device0
++ cat /sys/bus/iio/devices/iio:device0/in_voltage0_raw
+768
++ sleep 0.5
++ cat /sys/bus/iio/devices/iio:device0/in_voltage0_raw
+1088
++ cat /sys/bus/iio/devices/iio:device0/in_voltage1_raw
+2047
++ cat /sys/bus/iio/devices/iio:device0/in_voltage0_scale
+0.805664062
++ echo 'Sampling LED brightness for 8s (should show both 0 and 1):'
+Sampling LED brightness for 8s (should show both 0 and 1):
++ timeout 8 bash -c 'while true; do cat /sys/class/leds/bits:status:adc/brightness; sleep 0.2; done'
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+0
+0
+0
+0
+0
+0
+0
++ true
++ sudo rmmod bitsadc
++ echo '=== bitsadc test PASSED ==='
+=== bitsadc test PASSED ===

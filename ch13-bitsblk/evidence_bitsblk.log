@@ -1,0 +1,37 @@
++ MODULE=bitsblk
++ DEV=/dev/bitsblk0
++ MNT=/mnt/bitsblk_test
++ IMG=big.bin
++ sudo insmod ./bitsblk.ko size_mb=16
++ sleep 1
++ lsblk
++ grep bitsblk
+bitsblk0 251:0    0    16M  0 disk 
++ dd if=/dev/urandom of=big.bin bs=1M count=2
+2+0 records in
+2+0 records out
+2097152 bytes (2.1 MB, 2.0 MiB) copied, 0.0184324 s, 114 MB/s
++ sudo mkfs.ext4 -F /dev/bitsblk0
+mke2fs 1.46.5 (30-Dec-2021)
+Creating filesystem with 4096 4k blocks and 4096 inodes
+
+Allocating group tables: 0/1   done                            
+Writing inode tables: 0/1   done                            
+Creating journal (1024 blocks): done
+Writing superblocks and filesystem accounting information: 0/1   done
+
++ sudo mkdir -p /mnt/bitsblk_test
++ sudo mount /dev/bitsblk0 /mnt/bitsblk_test
++ sudo cp big.bin /mnt/bitsblk_test/
++ sync
++ sha256sum big.bin /mnt/bitsblk_test/big.bin
+4fad10da1ed7536d203dfffe72f306fa5c26e0c0d46ae9def3d5edd426a48b89  big.bin
+4fad10da1ed7536d203dfffe72f306fa5c26e0c0d46ae9def3d5edd426a48b89  /mnt/bitsblk_test/big.bin
++ sudo umount /mnt/bitsblk_test
++ sudo mount /dev/bitsblk0 /mnt/bitsblk_test
++ sha256sum /mnt/bitsblk_test/big.bin
+4fad10da1ed7536d203dfffe72f306fa5c26e0c0d46ae9def3d5edd426a48b89  /mnt/bitsblk_test/big.bin
++ sudo umount /mnt/bitsblk_test
++ sudo rmmod bitsblk
++ echo '=== bitsblk test PASSED ==='
+=== bitsblk test PASSED ===
